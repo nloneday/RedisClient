@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RedisClient</title>
+    <link rel="stylesheet" href="{% static 'spectre.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'client.css' %}"/>
+    <script rel="javascript" src="{% static 'jquery-3.2.1.min.js' %}"></script>
+    <script rel="javascript" src="{% static 'extend.js' %}"></script>
+    <script rel="javascript" src="{% static 'client.js' %}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="columns">
+        <div class="column col-2">
+            <header class="navbar">
+                <section class="navbar-section" style="width:100%;">
+                    <div class="input-group input-inline" style="width:100%;">
+                        <input class="form-input" type="text" placeholder="ip:port[:password]" id="ip">
+                        <button class="btn btn-primary input-group-btn btn-success" id="login">Log On</button>
+                    </div>
+                </section>
+            </header>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column col-2">
+            <header class="navbar" style="width:100%;">
+                <section class="navbar-section" style="width:100%;">
+                    <div class="input-group input-inline" style="width:100%;">
+                        <input class="form-input" type="text" placeholder="keywords" id="keywords">
+                        <button class="btn btn-primary input-group-btn" id="search">Search</button>
+                    </div>
+                </section>
+            </header>
+        </div>
+        <div class="column col-10" style="vertical-align: bottom">
+            <h5 id="info"></h5>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column col-2">
+            <ol id="keys"></ol>
+            <span>Go <a href="https://github.com/nloneday/RedisClient" target="_blank">Redis Client</a> for more details.</span>
+        </div>
+        <div class="column col-5">
+            <pre id="text"></pre>
+        </div>
+        <div class="column col-5">
+            <pre id="json"></pre>
+        </div>
+    </div>
+</div>
+</body>
+</html>

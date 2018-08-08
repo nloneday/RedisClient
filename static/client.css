@@ -1,0 +1,51 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    margin: 4px auto;
+}
+
+ol {
+    margin: 0;
+    overflow-x: auto;
+    height: 100%;
+}
+
+ol li {
+    margin: 0;
+    padding: 3px 5px;
+    white-space: nowrap;
+
+}
+
+ol li:hover {
+    background: #454d5d;
+    color: #fff;
+    cursor: pointer;
+}
+
+h5 {
+    height: 36px;
+    line-height: 36px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-top: 5px;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
+    margin: 0;
+}
+
+#ip:focus {
+    border-color: #2faa3f;
+    box-shadow: 0 0 0 .1rem rgba(87, 85, 217, .2)
+}
