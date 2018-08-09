@@ -1,5 +1,6 @@
 # RedisClient  
 Read only web client for standalone and cluster redis.
+![example.png](https://github.com/nloneday/RedisClient/blob/master/example.png)
 
 ### Run
 1. `cd $RedisClient_Home`
