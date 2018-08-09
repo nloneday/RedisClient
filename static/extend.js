@@ -2,8 +2,8 @@ $.extend({
     popUp: function (text, type, second = 2) {
         var types = {
             'info': {'background': 'rgba(50, 182, 67, .9)', 'border-color': '#32b643'},
-            'warning': {'background': 'rgba(232, 86, 0, .9)', 'border-color': '#ffb700'},
-            'error': {'background': 'rgba(50, 182, 67, .9)', 'border-color': '#e85600'},
+            'warning': {'background': 'rgba(255, 183, 0, .9)', 'border-color': '#ffb700'},
+            'error': {'background': 'rgba(232, 86, 0, .9)', 'border-color': '#e85600'},
         }
         var perfix = {
             'info': 'Info',

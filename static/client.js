@@ -4,6 +4,10 @@ $(document).ready(function () {
     $.popUp("Only db0 is supported！", "warning")
 
     $('#login').on('click', function () {
+        if ($('#ip').val().search(/(\d+\.){3}\d+:\d+(:\w+)?/g) != 0) {
+            $.popUp('Input format error, please check!', 'error')
+            return
+        }
         raw_args = $('#ip').val().split(':')
         var ip = raw_args[0]
         var port = raw_args[1]
@@ -14,10 +18,16 @@ $(document).ready(function () {
             type: "get",
             dataType: 'text',
             success: function (data) {
-                resize()
-                var keys = JSON.parse(data)
-                show_keys(keys)
-                raw_keys = keys
+                try {
+                    resize()
+                    var keys = JSON.parse(data)
+                    show_keys(keys)
+                    raw_keys = keys
+                }
+                catch (error) {
+                    alert(data)
+                    $('#ip').focusin()
+                }
             }
         });
     })
