@@ -8,9 +8,9 @@ Read only web client for standalone and cluster redis.
 3. `python3 manage.py runserver 0.0.0.0:8000 #default 8000`
 
 ### Log On  
-1. `ip:port`  
+1. ip:port  
 192.168.1.104:6379  
-2. `ip:port:password`
+2. ip:port:password  
 192.168.1.104:6379:secret  
 3. keys  
 When you log on successfully, all keys in the redis db0 will be cached in `client.js`, the variable named `raw_keys`.  
