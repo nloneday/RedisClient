@@ -37,4 +37,4 @@ If you click the key, the returned value will be newest because of real-time com
 1. framework  
 python(3.6.5), django(2.0.2), jquery(3.2.1, js, ECMAScript6), spectre(0.5.3 css)
 2. read only  
-Some of redis server was not protected by password or firewall, if the anonymous, meaning unsafe or inexpert, logs on redis server via the web RedisClient, some baleful or unconscious operations may be a disaster..., so, read only.
+Some of redis servers are not protected by password or firewall, if the anonymous, meaning unsafe or inexpert, logs on redis server via the web RedisClient, some baleful or unconscious operations may be a disaster..., so, read only.
