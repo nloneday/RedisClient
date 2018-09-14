@@ -22,7 +22,7 @@ def get(ip, port, password, key):
     try:
         conn = _redis_conn(ip, port, password=password or None)
         if key == '*':
-            result = conn.keys()
+            result = conn.scan(count=conn.dbsize())[1]
             result.sort()
             result = json.dumps(result, ensure_ascii=False)
         else:

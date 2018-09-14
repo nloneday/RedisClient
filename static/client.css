@@ -7,7 +7,7 @@ body {
     min-width: 1000px;
 }
 
-header {
+div.column {
     margin: 4px auto;
 }
 
@@ -44,11 +44,6 @@ pre {
     word-wrap: break-word;
     word-break: break-all;
     margin: 0;
-}
-
-#ip:focus {
-    border-color: #2faa3f;
-    box-shadow: 0 0 0 .1rem rgba(87, 85, 217, .2)
 }
 
 span {

@@ -21,7 +21,7 @@ $(document).ready(function () {
                 try {
                     resize()
                     var keys = JSON.parse(data)
-                    show_keys(keys)
+                    show_keys(keys, 'All')
                     raw_keys = keys
                 }
                 catch (error) {
@@ -34,9 +34,10 @@ $(document).ready(function () {
 
     $('#search').on('click', function () {
         var keywords = $('#keywords').val().toLowerCase()
-        var filtered = []
+        var filtered = [], type = 'Search'
         if (keywords.trim() == '') {
             filtered = raw_keys
+            type = 'All'
         }
         else {
             for (var key of raw_keys) {
@@ -45,7 +46,7 @@ $(document).ready(function () {
                 }
             }
         }
-        show_keys(filtered)
+        show_keys(filtered, type)
     })
 
     $('#keys').on('click', 'li', function () {
@@ -67,13 +68,14 @@ $(document).ready(function () {
         });
     })
 
-    function show_keys(keys) {
+    function show_keys(keys, type) {
         $('ol li').remove()
         var lis = ''
         for (var key of keys) {
             lis = lis + '<li>{0}</li>'.format(key)
         }
         $('#keys').append(lis)
+        $('#info').text('KEYS: {0}, TYPE: {1}'.format(keys.length, type))
     }
 
     $(window).resize(function () {
@@ -81,6 +83,6 @@ $(document).ready(function () {
     })
 
     function resize() {
-        $('ol').height($('body').height() - 120)
+        $('ol').height($('body').height() - 140)
     }
 })
