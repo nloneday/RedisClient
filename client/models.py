@@ -20,9 +20,17 @@ datatypes = {
 
 def get(ip, port, password, key):
     try:
+        _key = '{}:{}'.format(ip, port)
+        result = []
         conn = _redis_conn(ip, port, password=password or None)
         if key == '*':
-            result = conn.scan(count=conn.dbsize())[1]
+            if conntypes[_key] == 'cluster':
+                keys = sum(conn.dbsize().values()) // 2
+                values = conn.scan(count=keys).values()
+                for item in values:
+                    result.extend(item[1])
+            else:
+                result = conn.scan(count=conn.dbsize())[1]
             result.sort()
             result = json.dumps(result, ensure_ascii=False)
         else:
