@@ -3,13 +3,12 @@ from redis import StrictRedis
 import json
 import sys
 
-redistypes = ['standalone', 'cluster']
-conntypes = {
+REDIS_TYPE = ['standalone', 'cluster']
+CONNS_TYPE = {
     # '127.0.0.1:6379': 'standalone',
     # '127.0.0.1:7000': 'cluster'
 }
-datatypes = {
-    'none': 'get',
+DATA_TYPES = {
     'string': 'get',
     'list': 'lrange',
     'set': 'smembers',
@@ -17,15 +16,19 @@ datatypes = {
     'hash': 'hgetall',
 }
 
+CONN = None
+
 
 def get(ip, port, password, key):
     try:
-        _key = '{}:{}'.format(ip, port)
+        _conns_type_key = '{}:{}'.format(ip, port)
         result = []
         conn = _redis_conn(ip, port, password=password or None)
         if key == '*':
-            if conntypes[_key] == 'cluster':
-                keys = sum(conn.dbsize().values()) // 2
+            if CONNS_TYPE[_conns_type_key] == 'cluster':
+                masters = ['{}:{}'.format(node['host'], node['port']) for node in conn.cluster_nodes() if
+                           node['master'] is None]
+                keys = sum([conn.dbsize()[node] for node in masters])
                 values = conn.scan(count=keys).values()
                 for item in values:
                     result.extend(item[1])
@@ -34,35 +37,41 @@ def get(ip, port, password, key):
             result.sort()
             result = json.dumps(result, ensure_ascii=False)
         else:
-            datatype = conn.type(key)
-            value = datatype in ('list', 'zset') and getattr(conn, datatypes[datatype])(key, 0, -1) or getattr(conn, datatypes[datatype])(key)
+            data_type = conn.type(key)
+            if data_type in ('list', 'zset'):
+                value = getattr(conn, DATA_TYPES[data_type])(key, 0, -1)
+            else:
+                value = getattr(conn, DATA_TYPES[data_type])(key)
             value = json.dumps(isinstance(value, set) and list(value) or value, ensure_ascii=False)
             size = str(sys.getsizeof(value)) + 'bytes'
-            result = json.dumps({'key': key, 'value': value, 'type': datatype, 'size': size})
+            result = json.dumps({'key': key, 'value': value, 'type': data_type, 'size': size})
     except Exception as e:
         print(e)
-        conntypes.pop('{}:{}'.format(ip, port))
+        CONNS_TYPE.pop('{}:{}'.format(ip, port))
         result = str(e)
     return result
 
 
 def _redis_conn(ip, port, password=None):
-    _key = '{}:{}'.format(ip, port)
-    print('"{}": "{}"'.format(_key, conntypes.get(_key, "First log on")))
-    if conntypes.get(_key, None) == 'standalone':
-        conn = _conn_standalone(ip, port, password)
-    elif conntypes.get(_key, None) == 'cluster':
-        conn = _conn_cluster(ip, port, password)
-    else:
-        conn = _conn_cluster(ip, port, password)
-        conn = conn or _conn_standalone(ip, port, password)
-    return conn
+    global CONN
+    if CONN is None:
+        _conns_type_key = '{}:{}'.format(ip, port)
+        print('"{}": "{}"'.format(_conns_type_key, CONNS_TYPE.get(_conns_type_key, "First log on")))
+        if CONNS_TYPE.get(_conns_type_key, None) == 'standalone':
+            CONN = _conn_standalone(ip, port, password)
+        elif CONNS_TYPE.get(_conns_type_key, None) == 'cluster':
+            CONN = _conn_cluster(ip, port, password)
+        else:
+            CONN = _conn_cluster(ip, port, password)
+            CONN = CONN or _conn_standalone(ip, port, password)
+    return CONN
 
 
 def _conn_standalone(ip, port, password):
     try:
-        conn = StrictRedis(host=ip, port=port, decode_responses=True, password=password, socket_connect_timeout=2)
-        conntypes['{}:{}'.format(ip, port)] = 'standalone'
+        conn = StrictRedis(host=ip, port=port, decode_responses=True, password=password, socket_connect_timeout=5,
+                           socket_timeout=10, retry_on_timeout=True)
+        CONNS_TYPE['{}:{}'.format(ip, port)] = 'standalone'
     except Exception as e:
         print(e)
         conn = None
@@ -71,8 +80,9 @@ def _conn_standalone(ip, port, password):
 
 def _conn_cluster(ip, port, password):
     try:
-        conn = StrictRedisCluster(startup_nodes=[{'host': ip, 'port': int(port)}], decode_responses=True, password=password, socket_connect_timeout=2)
-        conntypes['{}:{}'.format(ip, port)] = 'cluster'
+        conn = StrictRedisCluster(startup_nodes=[{'host': ip, 'port': int(port)}], decode_responses=True,
+                                  password=password, socket_connect_timeout=5, socket_timeout=10, retry_on_timeout=True)
+        CONNS_TYPE['{}:{}'.format(ip, port)] = 'cluster'
     except Exception as e:
         print(e)
         conn = None
