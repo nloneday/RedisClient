@@ -1,40 +1,40 @@
 # RedisClient  
-Read only web client for standalone and cluster redis.
+一个通过浏览器即可查看数据的Redis客户端，支持单机、集群查询。
 ![example.png](https://github.com/nloneday/RedisClient/blob/master/example.png)
 
-### Run
+### 运行
 1. `cd $RedisClient_Home`
 2. `pip3 install -r requirements.txt`
 3. `python3 manage.py runserver 0.0.0.0:8000 #default 8000`
+4. 浏览器登录`http://your-ip:8000`使用
 
-### Log On  
-1. ip:port  
-192.168.1.104:6379  
-2. ip:port:password  
-192.168.1.104:6379:secret  
-3. keys  
-When you log on successfully, all keys in the redis db0 will be cached in `client.js`, the variable named `raw_keys`.  
+### 登录 
+1. host:port  
+192.168.1.104:6379，展开更多可设置password、db。
+2. 成功  
+登录成功之后，Redis的所有KEYS都会被读取至页面缓存并展示。
 
-### Search  
+### 检索 
 1. keywords  
-You can use keywords instead of redis key to search from redis, in fact from the cached `raw_keys`.  
-2. up to date  
-As you know, all keys was cached in the `raw_keys`, so, if you want to see all the newest keys, please click `Log On` button again.  
+可通过关键字模糊检索，不区分大小写。检索不会与服务器交互，通过前端缓存获得。
+2. 服务器KEYS变动  
+因为在登录成功后，所有KEYS都会在前端缓存，所以要查询最新的KEYS，点击登录一次即可。
+  
 
-### Value  
+### K-V  
 1. key  
-If you click the key, the returned value will be newest because of real-time communication with redis server.  
-2. returned  
-`Key: key, Type: datatype of key, Length: length of returned string, Size: sys.getsizeof(key)`, Value: value of key and shown as Text and Json
+点击左侧列表即可查询K-V，每一次查询都是从服务器获取最新值。
+2. 返回值 
+Key: key, Type: 数据类型, Size: 通过sys.getsizeof(key)获取内存大小, Value: 通过`Json, Text`形式展示
 
 ### Docker
 1. `docker pull nandy/redisclient`
 2. `docker run -d -p 8000:8000 nandy/redisclient`
-4. View `http://your-ip:8000` to use.
+4. 浏览器登录`http://your-ip:8000`使用
 3. Go to [Docker Hub](https://hub.docker.com/r/nandy/redisclient/) for more details.
 
-### Others  
-1. framework  
-python(3.6.5), django(2.0.2), jquery(3.2.1, js, ECMAScript6), spectre(0.5.3 css)
-2. read only  
-Some of redis servers are not protected by password or firewall, if the anonymous, meaning unsafe or inexpert, logs on redis server via the web RedisClient, some baleful or unconscious operations may be a disaster..., so, read only.
+### 其他  
+1. 框架  
+python(3.6.5), django(2.0.8), jquery(3.2.1, js, ECMAScript6), spectre(0.5.3 css)
+2. 只读？ 
+一些Redis服务器没有设置密码或防火墙，如果提供写操作以免误操作或恶意攻击。
