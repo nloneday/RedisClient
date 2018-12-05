@@ -11,48 +11,55 @@
     <script rel="javascript" src="{% static 'client.js' %}"></script>
 </head>
 <body>
-<div class="container">
-    <div class="columns">
-        <div class="column col-2">
-            <header class="navbar">
-                <section class="navbar-section" style="width:100%;">
-                    <div class="input-group input-inline" style="width:100%;">
-                        <input class="form-input" type="text" placeholder="ip:port[:password]" id="ip">
-                        <button class="btn btn-primary input-group-btn" id="login">Log On</button>
-                    </div>
-                </section>
-            </header>
+<article style="display: flex">
+    <section style="width: 20%;min-width: 240px">
+        {#radio#}
+        <div class="form-group" style="margin: 0">
+            <label class="form-radio form-inline">
+                <input type="radio" name="type" value="standalone" checked="checked">
+                <i class="form-icon"></i> standalone
+            </label>
+            <label class="form-radio form-inline">
+                <input type="radio" name="type" value="cluster">
+                <i class="form-icon"></i> cluster
+            </label>
         </div>
-        <div class="column col-10">
+        {#login#}
+        <div class="input-group input-inline" style="width:100%;">
+            <input class="form-input" type="text" placeholder="host:port" id="host" pattern="(\d+\.){3}\d+[:：]\d+">
+            <button class="btn btn-primary input-group-btn" id="login">Log On</button>
         </div>
-    </div>
-    <div class="columns">
-        <div class="column col-2">
-            <header class="navbar" style="width:100%;">
-                <section class="navbar-section" style="width:100%;">
-                    <div class="input-group input-inline" style="width:100%;">
-                        <input class="form-input" type="text" placeholder="keywords" id="keywords">
-                        <button class="btn input-group-btn" id="search">Search</button>
-                    </div>
-                </section>
-            </header>
+        <p id="more">===</p>
+        {#more#}
+        <aside class="more" style="display: flex">
+            <input id="password" class="form-input" type="password" placeholder="password" style="margin: 0 2px 2px 0">
+            <input id="db" class="form-input" type="number" min="0" max="15" placeholder="0~15(db0)"
+                   style="margin:0 0 2px 2px">
+        </aside>
+        {#search#}
+        <div class="input-group input-inline" style="width:100%;">
+            <input class="form-input" type="text" placeholder="keywords" id="keywords">
+            <button class="btn input-group-btn" id="search">Search</button>
         </div>
-        <div class="column col-10">
-            <h5 id="info"></h5>
-        </div>
-    </div>
-    <div class="columns">
-        <div class="column col-2">
-            <ol id="keys"></ol>
-            <span>Go to <a href="https://github.com/nloneday/RedisClient" target="_blank">Redis Client</a> for more details.</span>
-        </div>
-        <div class="column col-5">
-            <pre id="text"></pre>
-        </div>
-        <div class="column col-5">
-            <pre id="json"></pre>
-        </div>
-    </div>
-</div>
+        {#nav#}
+        <ol id="keys"></ol>
+        <button id="back" class="btn btn-block">Go back</button>
+    </section>
+    <section style="width: 80%">
+        <h5 id="info"></h5>
+        <ul class="tab">
+            <li class="tab-item active" value="Json">
+                <a>Json</a>
+            </li>
+            <li class="tab-item" value="Text">
+                <a>Text</a>
+            </li>
+        </ul>
+        <pre id="json"></pre>
+    </section>
+</article>
+<footer>
+    <p>Go to <a href="https://github.com/nloneday/RedisClient" target="_blank">Redis Client</a> for more details.</p>
+</footer>
 </body>
 </html>

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from . import models
+from .models import Redis
 
 
 # Create your views here.
@@ -9,9 +9,9 @@ def html(request):
 
 
 def get(request):
-    ip = request.GET.get('ip')
-    port = request.GET.get('port')
-    password = request.GET.get('password')
+    args = request.GET.get('args').split(':')
     key = request.GET.get('key')
-    result = models.get(ip, port, password, key)
+    hash_key = request.GET.get('hash_key')
+    redis = Redis(*args, key, hash_key)
+    result = redis.get()
     return HttpResponse(result, content_type='text/text; charset=utf-8')
