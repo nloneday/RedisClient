@@ -37,4 +37,4 @@ Key: key, Type: 数据类型, Size: 通过sys.getsizeof(key)获取内存大小, 
 1. 框架  
 python(3.6.5), django(2.0.8), jquery(3.2.1, js, ECMAScript6), spectre(0.5.3 css)
 2. 只读？   
-一些Redis服务器没有设置密码或防火墙，如果提供写操作以免误操作或恶意攻击。
+一些Redis服务器没有设置密码、防火墙、堡垒机等保护措施，如果提供写操作可能会引发误操作或恶意攻击等严重后果。
