@@ -72,7 +72,7 @@ $(document).ready(function () {
             var data = get_data(key, hash_key)
             var result = JSON.parse(data)
             RAW_VALUE = [$(this).index(), result['value']]
-            $('#info').text('Key: {0}, Type: {1}, Size: {2}, HashKey: {3}'.format(result['key'], result['type'], result['size'], result['hash_key']))
+            $('#info').text('Key: {0}, HashKey: {1}, Type: {2}'.format(result['key'], result['hash_key'], result['type']))
             $('ul li').eq(0).trigger('click')
         }
         else {
@@ -89,7 +89,7 @@ $(document).ready(function () {
             }
             else {
                 RAW_VALUE = [$(this).index(), result['value']]
-                $('#info').text('Key: {0}, Type: {1}, Size: {2}'.format(result['key'], result['type'], result['size']))
+                $('#info').text('Key: {0}, Type: {1}'.format(result['key'], result['type']))
                 $('ul li').eq(0).trigger('click')
             }
         }

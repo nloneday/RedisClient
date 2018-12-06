@@ -55,8 +55,7 @@ class Redis:
                 else:
                     value = getattr(conn, DATA_TYPES[data_type])(self._key)
                 value = json.dumps(isinstance(value, set) and list(value) or value, ensure_ascii=False)
-                size = str(sys.getsizeof(value)) + 'bytes'
-                result = {'key': self._key, 'value': value, 'type': data_type, 'size': size}
+                result = {'key': self._key, 'type': data_type, 'value': value}
                 if self._hash_key:
                     result['hash_key'] = self._hash_key
                 result = json.dumps(result)
