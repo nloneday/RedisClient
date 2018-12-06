@@ -1,20 +1,22 @@
 $(document).ready(function () {
-    init();
-
     /*login keys and search result keys*/
     var RAW_KEYS = []
     /*hash keys*/
     var RAW_KEYS_BACKUP = []
     /*login keys, search result keys, hash keys info*/
     var RAW_INFO = {}
-
     /*show as json and text*/
     var RAW_VALUE = []
 
+    init();
+
     function init() {
+        RAW_KEYS = []
+        RAW_KEYS_BACKUP = []
+        RAW_INFO = {}
+        RAW_VALUE = []
         resize()
-        $('aside.more').hide()
-        $('#back').hide()
+        $('aside.more,#back').hide()
         $('#keywords,ol,#info,#json').text('')
     }
 
@@ -29,10 +31,6 @@ $(document).ready(function () {
     })
 
     $('#login').on('click', function () {
-        RAW_KEYS = []
-        RAW_KEYS_BACKUP = []
-        RAW_INFO = {}
-        RAW_VALUE = []
         init()
         var data = get_data('*')
         try {
@@ -103,8 +101,8 @@ $(document).ready(function () {
             $('#json').text(RAW_VALUE[1])
         }
         else {
-            var _data = JSON.parse(RAW_VALUE[1])
-            var data = ''
+            var _data = JSON.parse(RAW_VALUE[1]);
+            var data = '';
             if (typeof(_data) == 'string') {
                 data = _data
             }

@@ -6,15 +6,15 @@ import sys
 REDIS_TYPE = ['standalone', 'cluster']
 
 CONN = {
-    # '127.0.0.1:6379:db?': 'standalone',
-    # '127.0.0.1:7000:db0': 'cluster'
+    # '127.0.0.1:6379:db?:standalone': 'conn',
+    # '127.0.0.1:7000:db0:cluster': 'conn'
 }
 DATA_TYPES = {
     'string': 'get',
     'list': 'lrange',
     'set': 'smembers',
     'zset': 'zrange',
-    'hash': 'hgetall',
+    'hash': 'hkeys',
 }
 
 
@@ -50,11 +50,8 @@ class Redis:
                 data_type = conn.type(self._key)
                 if data_type in ('list', 'zset'):
                     value = getattr(conn, DATA_TYPES[data_type])(self._key, 0, -1)
-                elif data_type == 'hash':
-                    if self._hash_key:
-                        value = conn.hget(self._key, self._hash_key)
-                    else:
-                        value = conn.hkeys(self._key)
+                elif data_type == 'hash' and self._hash_key:
+                    value = conn.hget(self._key, self._hash_key)
                 else:
                     value = getattr(conn, DATA_TYPES[data_type])(self._key)
                 value = json.dumps(isinstance(value, set) and list(value) or value, ensure_ascii=False)
@@ -70,34 +67,21 @@ class Redis:
         return result
 
     def _redis_conn(self):
+        conn = None
         global CONN
-        if CONN.get(self._conn_key, None) is None:
-            print('"{}": "{}"'.format(self._conn_key, "First log on"))
-            if self._redis == 'standalone':
-                conn = self._conn_standalone()
-            else:
-                conn = self._conn_cluster()
-            if conn:
+        try:
+            if CONN.get(self._conn_key, None) is None:
+                if self._redis == 'standalone':
+                    conn = StrictRedis(host=self._host, port=self._port, db=self._db, password=self._password,
+                                       decode_responses=True, socket_connect_timeout=5, socket_timeout=5)
+                else:
+                    conn = StrictRedisCluster(startup_nodes=[{'host': self._host, 'port': int(self._port)}],
+                                              password=self._password, decode_responses=True, socket_connect_timeout=5,
+                                              socket_timeout=5)
+                print('"{}": "{}"'.format(self._conn_key, "First log on"))
                 CONN[self._conn_key] = conn
-        else:
-            conn = CONN[self._conn_key]
-        return conn
-
-    def _conn_standalone(self):
-        try:
-            conn = StrictRedis(host=self._host, port=self._port, db=self._db, password=self._password,
-                               decode_responses=True, socket_connect_timeout=5, socket_timeout=5)
+            else:
+                conn = CONN[self._conn_key]
         except Exception as e:
             print(e)
-            conn = None
-        return conn
-
-    def _conn_cluster(self):
-        try:
-            conn = StrictRedisCluster(startup_nodes=[{'host': self._host, 'port': int(self._port)}],
-                                      password=self._password, decode_responses=True, socket_connect_timeout=5,
-                                      socket_timeout=5)
-        except Exception as e:
-            print(e)
-            conn = None
         return conn
