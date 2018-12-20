@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Redis
+from RedisClient.settings import VERSION
 
 
 # Create your views here.
 def html(request):
-    return render(request, 'client.html')
+    return render(request, 'client.html', {'VERSION': VERSION})
 
 
 def get(request):

@@ -8,6 +8,9 @@ $(document).ready(function () {
     /*show as json and text*/
     var RAW_VALUE = []
 
+    /*hash key(first level) 2018-12-20*/
+    var HASH_KEY = ''
+
     init();
 
     function init() {
@@ -15,6 +18,7 @@ $(document).ready(function () {
         RAW_KEYS_BACKUP = []
         RAW_INFO = {}
         RAW_VALUE = []
+        HASH_KEY = ''
         resize()
         $('aside.more,#back').hide()
         $('#keywords,ol,#info,#json').text('')
@@ -66,8 +70,8 @@ $(document).ready(function () {
         $(this).addClass('active')
 
         /*Hash Type*/
-        if (['ALL', 'SEARCH'].indexOf(RAW_INFO.TYPE) == -1) {
-            var key = RAW_INFO.TYPE
+        if (HASH_KEY) {
+            var key = HASH_KEY
             var hash_key = $(this).text()
             var data = get_data(key, hash_key)
             var result = JSON.parse(data)
@@ -80,6 +84,7 @@ $(document).ready(function () {
             var data = get_data(key)
             var result = JSON.parse(data)
             if (result['type'] == 'hash') {
+                HASH_KEY = key
                 RAW_VALUE = [0, result['value']]
                 RAW_KEYS_BACKUP = RAW_KEYS
                 RAW_KEYS = JSON.parse(RAW_VALUE[1])
@@ -121,6 +126,7 @@ $(document).ready(function () {
         RAW_KEYS_BACKUP = []
         show_keys(RAW_KEYS, 'ALL')
         $('#search').trigger('click')
+        HASH_KEY = ''
     })
 
     function get_data(key, hash_key = '') {
