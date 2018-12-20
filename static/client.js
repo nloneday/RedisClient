@@ -146,6 +146,7 @@ $(document).ready(function () {
     }
 
     function show_keys(keys, type) {
+        keys = keys.sort()
         var lis = '<li>{0}</li>'.format(keys.join('</li><li>'))
         $('#keys').html(lis)
         RAW_INFO = {'KEYS': keys.length.toString(), 'TYPE': type}

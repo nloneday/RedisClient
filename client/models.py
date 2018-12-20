@@ -44,7 +44,6 @@ class Redis:
                 else:
                     keys = conn.dbsize()
                     result = keys and conn.scan(count=conn.dbsize())[1] or []
-                result.sort()
                 result = json.dumps(result, ensure_ascii=False)
             else:
                 data_type = conn.type(self._key)
